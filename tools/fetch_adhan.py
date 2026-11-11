@@ -4,7 +4,7 @@
 وقت بناء الـ APK على GitHub Actions.
 
 لو عايز صوت أذان معين: حط الملف بنفسك في
-  prayer/android/app/src/main/res/raw/adhan.mp3
+  android/app/src/main/res/raw/adhan.mp3
 (واختياري adhan_fajr.mp3 لأذان الفجر) والسكربت ده مش هيعمل حاجة.
 """
 import json

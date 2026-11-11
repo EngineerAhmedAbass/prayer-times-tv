@@ -1,0 +1,8 @@
+.gradle/
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+*.apk
+__pycache__/
+.DS_Store

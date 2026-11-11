@@ -4,7 +4,7 @@
 بيعرض مواقيت الصلاة وبيأذن لوحده في ميعاد كل صلاة، حتى لو أنت بتتفرج على تطبيق تاني.
 
 ## التحميل
-**https://github.com/EngineerAhmedAbass/Test2/releases/download/prayer-latest/Prayer-TV.apk**
+**https://github.com/EngineerAhmedAbass/prayer-times-tv/releases/latest/download/Prayer-TV.apk**
 
 ## التسطيب على التليفزيون
 1. على التليفزيون سطّب تطبيق **Downloader** (من Google Play) أو انقل الملف بفلاشة.
@@ -57,6 +57,10 @@
 - **الشيخ إسلام صبحي (أذان الفجر)** — `res/raw/adhan_fajr_sobhi.mp3` — ده الافتراضي لصلاة الفجر بس
 
 لو الملف ده اتشال، وقت البناء بيتحمّل تسجيل أذان برخصة حرة من Wikimedia Commons بداله.
-لو عايز تغيّر الصوت: حط الملف في `prayer/android/app/src/main/res/raw/adhan.mp3`
+لو عايز تغيّر الصوت: حط الملف في `android/app/src/main/res/raw/adhan.mp3`
 (واختياري `adhan_fajr.mp3` لأذان الفجر) واعمل push، وهتطلع نسخة جديدة بالصوت ده.
 اسم الملف لازم يكون حروف إنجليزي صغيرة بس.
+
+## تطبيقات تانية
+- ⚽ [GOAL — نتايج الماتشات](https://github.com/EngineerAhmedAbass/goal-scores)
+- 📺 [مشغل IPTV](https://github.com/EngineerAhmedAbass/iptv-player)

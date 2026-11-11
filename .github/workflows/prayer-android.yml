@@ -2,8 +2,8 @@ name: Prayer TV APK
 
 on:
   push:
-    branches: ['main', 'ccr-239bb624-zdnjjm']
-    paths: ['prayer/**', '.github/workflows/prayer-android.yml']
+    branches: ['main']
+    paths-ignore: ['README.md']
   workflow_dispatch:
 
 permissions:
@@ -30,30 +30,32 @@ jobs:
 
       # لو مفيش ملف أذان في res/raw بنجيب تسجيل برخصة حرة من Wikimedia Commons
       - name: Get adhan audio
-        run: python3 prayer/tools/fetch_adhan.py prayer/android/app/src/main/res/raw || true
+        run: python3 tools/fetch_adhan.py android/app/src/main/res/raw || true
 
       - name: Build APK
-        run: gradle -p prayer/android assembleRelease --no-daemon --stacktrace
+        run: gradle -p android assembleRelease --no-daemon --stacktrace
 
       - name: Rename APK
         run: |
-          cp prayer/android/app/build/outputs/apk/release/app-release.apk Prayer-TV.apk
+          cp android/app/build/outputs/apk/release/app-release.apk Prayer-TV.apk
           # زرار التحديث في البرنامج بيقرا رقم آخر نسخة من هنا
-          echo '{"versionCode": ${{ github.run_number }}, "versionName": "1.0.${{ github.run_number }}"}' > version.json
+          V=$(( ${{ github.run_number }} + 100 ))
+          echo "{\"versionCode\": $V, \"versionName\": \"1.0.$V\"}" > version.json
 
       - uses: actions/upload-artifact@v4
         with:
           name: Prayer-TV-apk
           path: Prayer-TV.apk
 
-      # رابط ثابت لآخر نسخة: releases/download/prayer-latest/Prayer-TV.apk
+      # رابط ثابت لآخر نسخة: releases/latest/download/Prayer-TV.apk
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete prayer-latest --yes --cleanup-tag || true
-          gh release create prayer-latest Prayer-TV.apk version.json \
+          V=$(( ${{ github.run_number }} + 100 ))
+          gh release delete apk-latest --yes --cleanup-tag || true
+          gh release create apk-latest Prayer-TV.apk version.json \
             --target "${{ github.sha }}" \
-            --latest=false \
-            --title "مواقيت الصلاة للتليفزيون (نسخة ${{ github.run_number }})" \
+            --latest \
+            --title "مواقيت الصلاة للتليفزيون (نسخة $V)" \
             --notes "نزّل Prayer-TV.apk وسطّبه على التليفزيون (Android TV) أو الموبايل. افتحه مرة واختار مدينتك وهو هيأذن لوحده في كل صلاة."
