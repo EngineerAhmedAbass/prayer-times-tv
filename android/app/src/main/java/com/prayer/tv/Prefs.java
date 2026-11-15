@@ -17,17 +17,12 @@ final class Prefs {
 
     /** أصوات الأذان اللي جوه التطبيق (res/raw) */
     static final String[] VOICE_NAMES = {"الشيخ عمر هشام العربي", "الشيخ محمد مروان قصاص (المدينة)",
-            "شيخ المؤذنين بالحرم المكي (الأذان المكي)", "الشيخ إسلام صبحي",
-            "الشيخ إسلام صبحي (أذان الفجر)"};
-    /** adhan_sobhi = نفس أذان الفجر بتاع إسلام صبحي من غير "الصلاة خير من النوم" */
-    static final String[] VOICE_FILES = {"adhan", "adhan_qassas", "adhan_makkah", "adhan_sobhi",
-            "adhan_fajr_sobhi"};
-    /** المؤذن الافتراضي لباقي الصلوات: إسلام صبحي */
-    private static final int DEFAULT_VOICE = 3;
+            "شيخ المؤذنين بالحرم المكي (الأذان المكي)", "الشيخ إسلام صبحي (أذان الفجر)"};
+    static final String[] VOICE_FILES = {"adhan", "adhan_qassas", "adhan_makkah", "adhan_fajr_sobhi"};
     /** مؤذن الفجر الافتراضي: إسلام صبحي (أذان فيه "الصلاة خير من النوم") */
-    private static final int DEFAULT_FAJR_VOICE = 4;
+    private static final int DEFAULT_FAJR_VOICE = 3;
     /** أول كام صوت ينفعوا لباقي الصلوات (أذان الفجر فيه "الصلاة خير من النوم") */
-    static final int MAIN_VOICES = 4;
+    static final int MAIN_VOICES = 3;
 
     private static SharedPreferences sp(Context c) {
         SharedPreferences sp = c.getSharedPreferences("prayer", Context.MODE_PRIVATE);
@@ -35,14 +30,6 @@ final class Prefs {
         if (sp.getInt("voicesVersion", 1) < 2) {
             SharedPreferences.Editor e = sp.edit().putInt("voicesVersion", 2);
             if (sp.getInt("fajrVoice", -2) == 2) e.putInt("fajrVoice", 3);
-            e.commit();
-        }
-        // نسخة 3: أذان إسلام صبحي من غير "الصلاة خير من النوم" بقى للصلوات الأربعة،
-        // وأذانه الأصلي للفجر بس (اتنقل من رقم 3 لـ 4)
-        if (sp.getInt("voicesVersion", 1) < 3) {
-            SharedPreferences.Editor e = sp.edit().putInt("voicesVersion", 3);
-            e.putInt("voice", DEFAULT_VOICE);
-            e.putInt("fajrVoice", DEFAULT_FAJR_VOICE);
             e.commit();
         }
         return sp;
@@ -131,8 +118,8 @@ final class Prefs {
     static void setLoud(Context c, int v) { sp(c).edit().putInt("loud", v).commit(); }
 
     static int voice(Context c) {
-        int v = sp(c).getInt("voice", DEFAULT_VOICE);
-        return v >= 0 && v < MAIN_VOICES ? v : DEFAULT_VOICE;
+        int v = sp(c).getInt("voice", 0);
+        return v >= 0 && v < MAIN_VOICES ? v : 0;
     }
 
     static void setVoice(Context c, int v) { sp(c).edit().putInt("voice", v).commit(); }
