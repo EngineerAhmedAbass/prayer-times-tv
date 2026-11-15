@@ -17,11 +17,18 @@ final class Prefs {
 
     /** أصوات الأذان اللي جوه التطبيق (res/raw) */
     static final String[] VOICE_NAMES = {"الشيخ عمر هشام العربي", "الشيخ محمد مروان قصاص (المدينة)",
-            "شيخ المؤذنين بالحرم المكي (الأذان المكي)", "الشيخ إسلام صبحي (أذان الفجر)"};
-    static final String[] VOICE_FILES = {"adhan", "adhan_qassas", "adhan_makkah", "adhan_fajr_sobhi"};
-    /** مؤذن الفجر الافتراضي: إسلام صبحي (أذان فيه "الصلاة خير من النوم") */
+            "الأذان المكي", "الأذان المكي (أذان الفجر)", "الشيخ إسلام صبحي (أذان الفجر)"};
+    /**
+     * adhan_makkah_regular = الأذان المكي من غير "الصلاة خير من النوم" (للصلوات الأربعة)،
+     * adhan_makkah = التسجيل الأصلي اللي فيه الجملة دي (للفجر بس).
+     */
+    static final String[] VOICE_FILES = {"adhan", "adhan_qassas", "adhan_makkah_regular", "adhan_makkah",
+            "adhan_fajr_sobhi"};
+    /** المؤذن الافتراضي للصلوات الأربعة: الأذان المكي */
+    private static final int DEFAULT_VOICE = 2;
+    /** مؤذن الفجر الافتراضي: الأذان المكي الأصلي */
     private static final int DEFAULT_FAJR_VOICE = 3;
-    /** أول كام صوت ينفعوا لباقي الصلوات (أذان الفجر فيه "الصلاة خير من النوم") */
+    /** أول كام صوت ينفعوا لباقي الصلوات (أذانات الفجر فيها "الصلاة خير من النوم") */
     static final int MAIN_VOICES = 3;
 
     private static SharedPreferences sp(Context c) {
@@ -31,6 +38,14 @@ final class Prefs {
             SharedPreferences.Editor e = sp.edit().putInt("voicesVersion", 2);
             if (sp.getInt("fajrVoice", -2) == 2) e.putInt("fajrVoice", 3);
             e.commit();
+        }
+        // نسخة 3: الأذان المكي من غير "الصلاة خير من النوم" بقى للصلوات الأربعة،
+        // والأذان المكي الأصلي للفجر بس
+        if (sp.getInt("voicesVersion", 1) < 3) {
+            sp.edit().putInt("voicesVersion", 3)
+                    .putInt("voice", DEFAULT_VOICE)
+                    .putInt("fajrVoice", DEFAULT_FAJR_VOICE)
+                    .commit();
         }
         return sp;
     }
@@ -118,8 +133,8 @@ final class Prefs {
     static void setLoud(Context c, int v) { sp(c).edit().putInt("loud", v).commit(); }
 
     static int voice(Context c) {
-        int v = sp(c).getInt("voice", 0);
-        return v >= 0 && v < MAIN_VOICES ? v : 0;
+        int v = sp(c).getInt("voice", DEFAULT_VOICE);
+        return v >= 0 && v < MAIN_VOICES ? v : DEFAULT_VOICE;
     }
 
     static void setVoice(Context c, int v) { sp(c).edit().putInt("voice", v).commit(); }
